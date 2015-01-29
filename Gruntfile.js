@@ -5,7 +5,8 @@ module.exports = function(grunt){
 		files: [
 		  {
 		    expand: true,
-			src: 'Src/**/*.md',
+			cwd: 'Src',
+			src: '**/*.md',
 			dest: 'dist/',
 			ext: '.html'
 		  }
