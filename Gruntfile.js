@@ -1,4 +1,4 @@
-module.exports = function(grunt){
+﻿module.exports = function(grunt){
   grunt.initConfig({
 	markdown: {
 	  all: {
@@ -13,7 +13,19 @@ module.exports = function(grunt){
 		]
 	  }
 	},
-	
+	to_html:{
+	  main:{
+	    options: {
+		  title: '卓逸天成知识文库',
+		  rootDirectory: 'dist',
+		  useFileNameAsTitle: true,
+		  generatePage: true
+		},
+		files: {
+		  'dist/Index.html': 'dist/**/*.html'
+		}
+	  }
+	},
     clean:{
 	  dist: {
 	    files:[{
@@ -28,7 +40,8 @@ module.exports = function(grunt){
   
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-markdown');
+  grunt.loadNpmTasks('grunt-directory-to-html');
   
   
-  grunt.registerTask('build',['clean:dist','markdown']);
+  grunt.registerTask('build',['clean:dist','markdown','to_html']);
 }
