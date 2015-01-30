@@ -72,6 +72,7 @@ module.exports = function(grunt) {
 
     function buildDataStructure(options, directoryStructure,filedest, filepath) {
         var relativefilepath=path.relative(path.dirname(filedest),filepath);
+		relativefilepath=relativefilepath.replace(/\\/g, '/');
         var splitPaths = getDirectoryInFilepath(options.rootDirectory, filepath, true).split('/');
         var filenameIndex = splitPaths.length - 1;
         var directories;
