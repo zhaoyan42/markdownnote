@@ -25,7 +25,8 @@
 		  title: '卓逸天成知识文库',
 		  rootDirectory: 'dist',
 		  useFileNameAsTitle: true,
-		  generatePage: true		  
+		  generatePage: true,
+          stylesheet: 'http://kevinburke.bitbucket.org/markdowncss/markdown.css'
 		},
 		files: {		 
 		  'dist/Index.html': 'dist/**/*.html'
