@@ -10,7 +10,13 @@
 			dest: 'dist/',
 			ext: '.html'
 		  }
-		]
+		],
+        options: {
+            template: 'MarkdownTemplate.html'
+        },
+        markdownOptions: {
+           highlight: 'manual'
+        }
 	  }
 	},
 	generate_index:{
