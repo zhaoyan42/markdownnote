@@ -13,15 +13,15 @@
 		]
 	  }
 	},
-	to_html:{
-	  main:{
+	generate_index:{
+	  main:{	    
 	    options: {
 		  title: '卓逸天成知识文库',
 		  rootDirectory: 'dist',
 		  useFileNameAsTitle: true,
-		  generatePage: true
+		  generatePage: true		  
 		},
-		files: {
+		files: {		 
 		  'dist/Index.html': 'dist/**/*.html'
 		}
 	  }
@@ -37,11 +37,9 @@
       }
 	}
   });
-  
+  grunt.loadTasks('tasks');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-markdown');
-  grunt.loadNpmTasks('grunt-directory-to-html');
-  
-  
-  grunt.registerTask('build',['clean:dist','markdown','to_html']);
+
+  grunt.registerTask('build',['clean:dist','markdown','generate_index']);
 }
