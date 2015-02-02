@@ -12,11 +12,23 @@
 		  }
 		],
         options: {
-            template: 'MarkdownTemplate.html'
+            template: 'Templates/Article.html'
         },
         markdownOptions: {
            highlight: 'manual'
         }
+	  }
+	},
+	copy: {
+	  markdown: {
+	    files: [
+		 {
+		   expand: true,
+		   cwd: 'Templates/',
+		   src: ['**/*.css'],
+		   dest: 'dist/'
+		 }
+		]
 	  }
 	},
 	generate_index:{
@@ -46,7 +58,9 @@
   });
   grunt.loadTasks('tasks');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-markdown');
 
-  grunt.registerTask('build',['clean:dist','markdown','generate_index']);
+  grunt.registerTask('build',['clean:dist','markdown','generate_index','copy']);
+  grunt.registerTask('default',['build']);
 }
