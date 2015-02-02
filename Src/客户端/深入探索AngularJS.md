@@ -1,4 +1,4 @@
-#深入AngularJS
+#深入探索AngularJS
 
 [TOC]
 
