@@ -42,6 +42,15 @@ ele.addEventListener('click', function(event{});
 
 事件循环在Angular中有点争议，因为Angular自己也有一个事件循环。Angular的事件循环被称为$digest循环，又有两个小循环组成：evalAsyn循环和$watch列表。
 
+当事件触发时，它在Angular标识的上下文被调用。实际上，Angular是在$apply()方法中调用标识。整个流程开始于Angular在$rootScope级别启动$digest循环，然后递归的处理子scopes。
+
+当Angular进入$digest循环中三，它需要等待$evalAsync队列全部处理清空后，才把回调的控制权传递给浏览器。 $evalAsync是用来保存当前工作栈之外的待执行任务，这些任务必须在浏览器回显之前执行。
+
+另外$digest循环还在等待$watch表达式列表。上一次对$watch表达式的处理循环会导致一些数据的变化，而这些数据变化反过来又可能又会导致$watch表达式结果的进一步变动。因此$watch表达式还需要再一次计算，确保不再有新的变化产生。
+
+当$digest循环完成，执行权交还给浏览器，浏览器将会刷新DOM.
+
+整个流程在每一次浏览器实践触发以后，都会一次又一次的启动执行。这也是Angular的强大之处，也使得浏览器事件很容易的注入到Angular的流程中去。
 
 
 
