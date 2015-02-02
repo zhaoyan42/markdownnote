@@ -20,7 +20,7 @@
 	  }
 	},
 	copy: {
-	  markdown: {
+	  style: {
 	    files: [
 		 {
 		   expand: true,
@@ -38,7 +38,7 @@
 		  rootDirectory: 'dist',
 		  useFileNameAsTitle: true,
 		  generatePage: true,
-          stylesheet: 'http://kevinburke.bitbucket.org/markdowncss/markdown.css'
+          stylesheet: '/Style.css'
 		},
 		files: {		 
 		  'dist/Index.html': 'dist/**/*.html'
