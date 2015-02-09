@@ -40,16 +40,17 @@ public static class StringIs
 }
 
 public static class Is
+{
+    public static RuleMethod<T> InRange<T>(
+		T min,
+		T max)
+        where T : IComparable<T>
     {
-        public static RuleMethod<T> InRange<T>(
-			T min,
-			T max)
-            where T : IComparable<T>
-        {
-            return item => 
-				item.CompareTo(min) < 0 
-				|| item.CompareTo(max) > 0 ;                 
-        }
+        return item => 
+			item.CompareTo(min) < 0 
+			|| item.CompareTo(max) > 0 ;                 
+    }
+}
 ```
 
 这个代理也很容易用一个简单类封装成为`Rule`
@@ -75,3 +76,22 @@ public class MethodRule<T> : Rule<T>
 ```
 > 总结：
 Rule<T> == bool is_satisfy<T>(T item) == delegate bool RuleMethod<T>(T item)
+
+## 规则的组成元素
+> 表面上已经很简单的规则定义，却还能继续息分成三部分：检测对象、检测逻辑和指定对象。这三部分不仅仅是来源不同，数值不同，最主要的是生命周期大不相同。对它们的深入理解，有利于规则引擎的设计和理解。
+
+###  检测对象 - CheckingData
+这个检测对象就是`is_satisfy<T>(T obj)`中的obj, 是这个规则要检查的对象（值）。也是规则引擎的第一公民，我们经常说“合不合格”，“通不通过”，省掉的主语就是这个检测对象。然而，在规则引擎系统中，它的生命周期却是最短的，出现时间是最晚的。它是一个“动态”数据，规则引擎系统甚至完全不保存它。
+
+为了强调这个数据在引擎系统中的角色，我建议把`Rule`定义改为：
+```cs
+public interface Rule<CheckingDataType> :Rule
+{
+	bool is_satisfy(CheckingDataType checking_data);
+}
+```
+
+### 检测逻辑 
+
+
+### 指定对象
