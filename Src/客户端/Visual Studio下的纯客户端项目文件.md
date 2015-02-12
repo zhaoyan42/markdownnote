@@ -27,10 +27,11 @@
   </PropertyGroup>
       
   <ItemGroup>
-    <None Include="**\*.css" />    	 
-	<None Include="**\*.js" />    	 
-	<None Include="**\*.html" />    	 
-	<None Include="**\*.htm" />    	 
+   <None Include="*\*.js" />
+    <None Include="*\*.css" />
+    <None Include="*\*.html" />
+    <None Include="*\*.htm" />
+	<None Include="*.js" />    	 
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
