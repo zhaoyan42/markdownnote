@@ -42,3 +42,8 @@ QueryOver.Of<ComponentCode>()
 	.Fetch(x=>x.Children.First().Children).Eager
 	.Fetch(x=>x.Children.First().Children.First().Children).Eager
 ```
+
+## 重复记录
+使用Join(Eager)来Fetch数据库，存在重复记录的问题：
+http://nhibernate.info/doc/howto/various/get-unique-results-from-joined-queries.html
+http://www.andriybuday.com/2010/08/understanding-fetchmode-and-fetchtype.html
