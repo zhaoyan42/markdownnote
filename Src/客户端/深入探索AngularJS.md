@@ -26,6 +26,10 @@ Scope的唯一id号
 *  \$$prevSibling
 *  \$$nextSibling
 
+## 正交功能
+### Element和Attribute
+Directive可以定义为Element(标识)也可以定义为标识的属性。 更为强大的架构就是综合应用这两种功能，用属性定义来改变或增强原Element的功能。
+
 ---
 
 [原文](http://www.smashingmagazine.com/2015/01/22/angularjs-internals-in-depth/)
