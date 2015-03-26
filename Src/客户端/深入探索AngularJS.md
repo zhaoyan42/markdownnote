@@ -2,7 +2,7 @@
 
 [TOC]
 
-## Scope是DOM和Directives交互的抽象
+## 作用域Scope是DOM和Directives交互的抽象
 ### Scope是POJO对象
 AngularJS只是往Scope中添加了很多“内部"属性，大部分以\$开头，还有些以\$$开头，两个\$开头的属性一般不要使用。
 ### Scope是上下文
@@ -33,7 +33,7 @@ Directive可以定义为Element(标识)也可以定义为标识的属性。 更�
 ## 模块模式 - Module Pattern
 
 
-> 模块模式是一个设计模式，它能够消除大量重复的 `this` 和`prototype`使用。
+> 模块模式是一个设计模式，它能够消除大量重复的 `this` 和`prototype`使用。 Angular Material就使用这个模式开发模块代码 [Angular Material Coding Conventions and Guidelines](https://github.com/angular/material/blob/master/docs/guides/CODING.md)
 > 参考： http://toddmotto.com/mastering-the-module-pattern/
 
 ### 创建模块
