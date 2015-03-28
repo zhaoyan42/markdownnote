@@ -6,6 +6,8 @@
 
 > Material Design在动画、风格和布局方面提出了一系列的原则，并且为大量的视觉组件，包括按钮、卡片、网格和对话框等，以及相关的动作和手势提供了建议，另外还包含了一些与可访问性有关的指引。
 
+## 原则
+
 [谷歌Material Design原文](http://www.google.com/design/spec/material-design/introduction.html)
 
 [AngularJS的实现] (https://material.angularjs.org )
