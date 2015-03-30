@@ -96,7 +96,7 @@ myObj.publicMethod();
 ```
 当时标准方式的问题是，一些内部属性和方法都暴露出来了，不能隐藏(Javascript没有私有属性和方法)。　如上面例子中的`defaults`就有可能被外部用户修改，导致不期望的行为。
 
-## Promise　- 承诺式编程
+## Promise　- 异步的承诺
 > Promise让异步调用看起来更像同步调用，从而很容易的取到返回值和捕获异常。
 
 ### 介绍
@@ -108,6 +108,65 @@ Promise自始自终都是异步运行，我们不用担心它会阻塞其它部�
 
 Angular的事件循环(Event Loop)在$rootScope.$evalAsync阶段解析(Resolve)Promise，直到$digest运行循环结束。 我们和容易的把Promise的结果输出成视图，这能够直接把XHR调用的结果直接赋给$scope对象的一个属性。
 
+### 使用Promise到后台取数据的一个实例
+```html
+<ul ng-controller="DashboardController"> 
+	<li ng-repeat="pr in pullRequests">
+		{{pr.title}}
+	</li>
+</ul>
+```
+当用服务返回一个promise, 我们可以用`.then()`方法与promise进行交互操作， 我们可在该方法中修改scope中的任何变量，从而改变视图。
+```js
+angular.module('myApp', [])
+  .controller('DashboardController', ['$scope', 'GithubService', function($scope, GithubService){
+    GithubService.getPullRequests(123)  //这里返回的是Promise
+      .then(tunction(data){
+        $scope.pullRequests = data.data;
+      });
+  }]);
+```
+### 创建一个Promise
+内建服务`$q`可以用来创建你自己的Promise。我们可以通过调用`$q.defer()`方法来创建一个“延迟”对象: `var deferred = $q.defer();`
+“延迟”对象有三个方法和一个promise属性，该属性返回一个Promise对象。
+- `.resolve(value)` - 解析(返回结果)方法
+- `.reject(reason)` - 拒绝方法；等同于解析出一个拒绝对象`.resolve($q.reject(reason));`
+- `.notify(value)` - 返回执行的状态方法 
+
+### Promise执行状态
+如果我们有一个长时间运行的请求，可以调用`.notify()`来及时返回进程状态。 通常，我们会把这个长时间任务放在一个服务中：
+```js
+.factory('GithubService', funcion($q, $http){
+  var getEventsFromRepo= function(){
+    //task
+  };
+  var service = {
+    makeMultipleRequests: function(repos){
+      for (var i=0; i < repos.length; i++) {
+        output.push(getEventsFromRepo(repos[i]));
+        percentComplete = (i+1) / repos.length * 100;
+        d.notify(percentComplete);
+      }
+      d.resolve(output);
+      return d.promise;
+    }
+  }
+  return service;
+}); 
+```
+这里，每取一个repo, 我们就会收到一个进程状态的通知。下面是对这个Pomise的使用和状态通知的显示
+```js
+.controller('HomeController', function($scope, GithubService){
+  GithubService.makeMultipleRequests（['auser/behavior','..'])
+    .then(function(result){
+      //Handle the result
+    }, function(err){
+      //Error occurred
+    }, function(percentComplete) {
+      $scope.progress=percentComplte;
+  	});
+});
+```
 ---
 
 [原文](http://www.smashingmagazine.com/2015/01/22/angularjs-internals-in-depth/)
