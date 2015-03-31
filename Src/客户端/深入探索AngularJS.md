@@ -195,4 +195,4 @@ $q服务还有几个其他的帮助方法：
 
 ---
 
-[原文](http://www.smashingmagazine.com/2015/01/22/angularjs-internals-in-depth/)
+[参考 1](http://www.smashingmagazine.com/2015/01/22/angularjs-internals-in-depth/)
