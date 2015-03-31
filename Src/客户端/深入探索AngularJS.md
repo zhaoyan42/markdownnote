@@ -167,6 +167,32 @@ angular.module('myApp', [])
   	});
 });
 ```
+### 异步流
+Promise的then()方法返回一个新的Promise, 这个新的Promise实际上是在原始Promise的值解析之后创建的。这样我们就可以用then()让异步的执行通过一个一个Promise串联下去。
+
+使用then()我们创建了异步执行体流，这样我们可以在任何一步切入，然后切换不同的返回值。 这种切换也可以染我们暂停或者延迟解析的流程。
+> $http服务就是使用这种切入来实现请求和响应的interceptors。
+
+$q服务还有几个其他的帮助方法：
+* $q.all(promises) - 可以把多个Promise合并成一个Promise。
+* $q.defer() - 创建一个延迟对象。
+* $q.reject(reason) - 创建一个Promise，其解析值为rejection
+* $q.when(value) - 把一个对象封装成为Promise，这个对象可以是普通对象也可以原本就是Promise。
+
+## 与服务器的交互
+> 谈到后端时，我们有两种情况：有服务器后端和无服务器后端
+
+### ExpressJS作服务器后端
+#### 搭建Express
+0. 安装NodeJS
+1. 安装Express: `$ npm install -g express-generator`
+2. 创建网站： `$ express myApp` 
+3. 运行App准备：` cd myApp && npm install -d
+4. 运行App: `$ node app.js
+5. 高级运行App (源代码的改动触发重新编译): 
+`$ npm install --save-dev node mon`
+`$ nodemon app.js`
+
 ---
 
 [原文](http://www.smashingmagazine.com/2015/01/22/angularjs-internals-in-depth/)
