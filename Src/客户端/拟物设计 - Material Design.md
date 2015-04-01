@@ -14,13 +14,13 @@
 * 组件 - UI Component (Directives, Services, ARIA)
 * 布局 - Layout CSS (FlexBox, Attribute, Child Aligment) 
 * 风格 - Theme (Color Palettes) 
-![](https://cloud.githubusercontent.com/assets/210413/5077572/30dfc2f0-6e6a-11e4-9723-07c918128f4f.png)
+![](http://i.imgur.com/zyBZjZF.png)
 
 ### 拟物的世界
 #### 3D世界
 拟物的世界是3D世界，每个物体都有X, Y, Z三个方向的坐标。其中，Z是垂直于屏幕的轴，每一层在Z方向上都有标准的1dp厚度。 
 
-![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7UXpQYWltVjNPWXc/whatismaterial_environment_3d.png)
+![](http://i.imgur.com/25ickEy.png)
 
 #### 光和影
 拟物的世界还引入了虚拟光源，而实际上我们是看不到这个光源的，我们看到是这个光源在物体上留下的影子。
@@ -28,15 +28,15 @@
 ##### 主光
 主光源在物体上留下的是单方向的影子。
 
-![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7aUEtMG1ielNEaEk/whatismaterial_environment_shadow1.png)
+![](http://i.imgur.com/0qUyFGx.png)
 ##### 散光
 散光源在物体上留下的是多方向均匀而一致的模糊影子。
 
-![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7ZlNXZTJFX245YUE/whatismaterial_environment_shadow2.png)
+![](http://i.imgur.com/JGyx8MV.png)
 
 ##### 两种光源同时照射
 
-http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7Z19QQzFJWXhYT0E/whatismaterial_environment_shadow3.png
+![](http://i.imgur.com/WudJu9N.png)
 
 ## 布局
 Angular Material的 响应式CSS布局是基于flexbox实现的。整个布局体系是用元素的属性来标示，而不用CSS类。这也是正交设计的一个体现：属性来定义布局，类定义风格。
