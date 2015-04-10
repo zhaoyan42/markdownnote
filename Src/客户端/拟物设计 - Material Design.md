@@ -20,7 +20,6 @@
 #### 3D世界
 拟物的世界是3D世界，每个物体都有X, Y, Z三个方向的坐标。其中，Z是垂直于屏幕的轴，每一层在Z方向上都有标准的1dp厚度。 
 
-![](http://i.imgur.com/25ickEy.png)
 
 #### 光和影
 拟物的世界还引入了虚拟光源，而实际上我们是看不到这个光源的，我们看到是这个光源在物体上留下的影子。
@@ -63,6 +62,54 @@ Angular Material的 响应式CSS布局是基于flexbox实现的。整个布局�
   <div>I'm below.</div>
 </div>
 ```
+
+## 手势
+> iPhone的出现让手势操作大为流行，也使得手势编程成为开发人员的挑战。 拟物设计也把手势编程纳入在内，大概也想制定一个在交互模型标准。现阶段因为MD还在预发布阶段，因此还只实现了单点手势（一个指头），可是已经有足够的东西值得学习，无论对我们应用还是自己设计手势编程都是大有裨益。
+
+
+MD有两个手划控件`mdSwipeLeft`和`mdSwipeRight`,然而真正的代码支持却不在这两个控件的定义中，而是在核心代码中，文件位置`src\core\services\gesture\gesture.js`。
+### 基本屏幕事件
+做过界面的人都熟悉`mousedown, mouseup, mousemove`等事件，很多后台函数多与这些事件绑定，从而能够与用户交互。但是这些事件都有些单薄而僵硬，手势事件却更友好和人性化，这也是其大受欢迎的根本原因。
+手势事件不是空中楼阁，它们本身是需要这些基本事件的支持，这些基本屏幕事件也就成为了手势模型的一个组成部分，成为最底的一层。
+		
+这些事件首先被划分为三类，说是三类，理解成三个事件更为恰当，它们与手指与屏幕的交互一一对应：开始事件就是手指按下屏幕；移动事件就是手指在屏幕移动；结束事件就是手指离开屏幕。非常简单而直观。
+从下面MD对这三类事件的定义，我们也可以看到每类事件中的变体大都与设备的不同有关而不是真正的不同事件，如鼠标的按下，和手指的按下。这也是我上面说的把它们理解为三个事件更为恰当。
+* START_EVENTS =>'mousedown touchstart pointerdown';
+* MOVE_EVENTS  => 'mousemove touchmove pointermove';
+* END_EVENTS => 'mouseup mouseleave touchend touchcancel pointerup pointercancel';
+
+### 手势归纳
+基本事件都是瞬间事件，不存在延时和逻辑判断，按下就是按下，松开就是松开；这也是称之为基本事件的原因。
+而手势却恰恰相反，
+* 手势是综合事件，如滑动手势，直观的感觉就是手指按下快速向左（右）滑动，并同时松开手指，这整个过程完成才是一个滑动手势。
+* 手势还有逻辑判断，还是滑动手势，不仅仅要在以上的全过程之后才激发，手指的还要超过一定的速度才能算是滑动手势。
+
+因此，可以把手势看作在基本事件之上的一个封装，在MD的实现也是用GestureHandler的函数还侦听基本事件然后作出综合处理。
+
+这里是侦绑定的代码片断：
+```js
+angular.element(document)
+  .on(START_EVENTS, gestureStart)
+  .on(MOVE_EVENTS, gestureMove)
+  .on(END_EVENTS, gestureEnd)
+```
+GenstureHandler的处理模板
+
+### 流程
+| 		| 滑动	| 拖动 	|
+| ----- | ---- 	| ---- 	|
+| [无]	|	  	|		|
+| 按下	|	  	|		|
+| 移动	|	  	|		|
+| 移动	|	  	|		|
+| 移动	|	  	|		|
+| 移动	|	  	|		|
+| 松开	|	  	|		|
+| [无]	|	  	|		|
+
+
+
+
 
 [谷歌Material Design原文](http://www.google.com/design/spec/material-design/introduction.html)
 
