@@ -86,16 +86,103 @@ MD有两个手划控件`mdSwipeLeft`和`mdSwipeRight`,然而真正的代码支�
 
 因此，可以把手势看作在基本事件之上的一个封装，在MD的实现也是用GestureHandler的函数还侦听基本事件然后作出综合处理。
 
-这里是侦绑定的代码片断：
+#### 侦听
+这里是MD绑定基本事件的代码：
 ```js
 angular.element(document)
   .on(START_EVENTS, gestureStart)
   .on(MOVE_EVENTS, gestureMove)
   .on(END_EVENTS, gestureEnd)
 ```
-GenstureHandler的处理模板
 
-### 流程
+MD移动事件的侦听处理函数：
+```js
+function gestureMove(ev) {
+  if (!pointer || !typesMatch(ev, pointer)) return;
+  updatePointerState(ev, pointer);
+  runHandlers('move', ev);
+}
+```
+其它两个（开始和结束事件）都与此类似，只不过有更多的处理过程。这个因为简单，可以用来好好分析关键过程。我们可以看到，这个侦听函数的关键一步就是调用处理器(`runHandler`)。这个函数内部并不复杂，只是简单的遍历预存处理器，然后调用该处理器定义的对应的基本事件处理器。这个处理器就是手势处理器，它会分析归纳基本事件当条件满足时触发手势事件。
+
+#### 手势处理器`$$MdGestureHandler`
+MD用工厂(`factory`)的方式定义了手势处理器的模板(或者可以理解为基类帮助理解),这个factory名称就是$$MdGestureHandler，为了便于理解，我们把它分解成三部分来看。
+
+##### 基本屏幕事件处理
+第一部分：4个方法，分别与三类基本屏幕事件对应(cancel是辅助方法),也是用来分别处理三类屏幕事件的，上面的`runHandler`就是调用的源头。
+```js
+start: function(ev, pointer) {
+	if (this.state.isRunning) return;
+	var parentTarget = this.getNearestParent(ev.target);
+	var parentTargetOptions = parentTarget && parentTarget.$mdGesture[this.name] || {};
+
+	this.state = {
+	isRunning: true,
+	options: angular.extend({}, this.options, parentTargetOptions),
+	registeredParent: parentTarget
+	};
+	this.onStart(ev, pointer);
+	},
+move: function(ev, pointer) {
+	if (!this.state.isRunning) return;
+	this.onMove(ev, pointer);
+	},
+end: function(ev, pointer) {
+	if (!this.state.isRunning) return;
+	this.onEnd(ev, pointer);
+	this.state.isRunning = false;
+	},
+cancel: function(ev, pointer) {
+	this.onCancel(ev, pointer);
+	this.state = {};
+},
+```
+##### 优化的屏幕事件
+第二部分：4个内部事件，也是基本与以上4个方法对应，并在4个方法中适当的时机触发，可以看作是对原始基本事件的梳理之后的重新抛出。 你如果创建自己的手势处理器，要做的也就是重载这4个事件。从以下代码我们也可以看到，MD为每一个事件给出了空实现(`angular.noop')，目的就是为了让自定义处理器自己重载实现。
+```js
+onStart: angular.noop,
+onMove: angular.noop,
+onEnd: angular.noop,
+onCancel: angular.noop,
+```
+
+##### 手势的触发
+第三部分：也是最后最关键的一个方法，手势事件的触发`dispatchEvent`。自定义的手势处理器最终都是要调用这个方法来触发手势事件。大部分触发时机都在`onEnd`中，当是不是必须的，要根据你具体的手势的含义来定。
+dispatchEvent的实现：
+```js
+dispatchEvent: dispatchEvent,
+...
+/*
+* NOTE: dispatchEvent is very performance sensitive. 
+*/
+function dispatchEvent(srcEvent, eventType, eventPointer, /*original DOMEvent */ev) {
+	eventPointer = eventPointer || pointer;
+	var eventObj;
+	
+	if (eventType === 'click') {
+	  eventObj = document.createEvent('MouseEvents');
+	  eventObj.initMouseEvent(
+	    'click', true, true, window, ev.detail,
+	    ev.screenX, ev.screenY, ev.clientX, ev.clientY, 
+	    ev.ctrlKey, ev.altKey, ev.shiftKey, ev.metaKey,
+	    ev.button, ev.relatedTarget || null
+	  );
+	
+	} else {
+	  eventObj = document.createEvent('CustomEvent');
+	  eventObj.initCustomEvent(eventType, true, true, {});
+	}
+	eventObj.$material = true;
+	eventObj.pointer = eventPointer;
+	eventObj.srcEvent = srcEvent;
+	eventPointer.target.dispatchEvent(eventObj);
+}
+
+```
+
+#### 手势实例解析
+手势内部实现过程虽然较为复杂，以上的流程解析也是为了更好的理解从而有个直观的感觉。到了每一个手势的实现时，真正用到的却不算多，主要就是那4个优化的事件`onStart, onMove, onEnd, onCancel`和一个触发的方法'dispatchEvent`。我们来看看一些手势实例，亲身感受一下，良好建模以后的手势实现有多么直观简单。
+
 | 		| 滑动	| 拖动 	|
 | ----- | ---- 	| ---- 	|
 | [无]	|	  	|		|
