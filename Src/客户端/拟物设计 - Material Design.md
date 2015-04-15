@@ -63,7 +63,7 @@ Angular Material的 响应式CSS布局是基于flexbox实现的。整个布局�
 </div>
 ```
 
-## 手势
+## 手势模型
 > iPhone的出现让手势操作大为流行，也使得手势编程成为开发人员的挑战。 拟物设计也把手势编程纳入在内，大概也想制定一个在交互模型标准。现阶段因为MD还在预发布阶段，因此还只实现了单点手势（一个指头），可是已经有足够的东西值得学习，无论对我们应用还是自己设计手势编程都是大有裨益。
 
 
@@ -207,6 +207,18 @@ function dispatchEvent(srcEvent, eventType, eventPointer, /*original DOMEvent */
 | 移动		|	  					|$md.drag		|
 | 松开		| 						|$md.dragend	|
 | [无]		|	  					|				|
+
+## 手势事件的应用
+
+### 开关控件 - switch
+> MD本身的控件switch就有对拖动手势的使用，代码位置： src\components\switch\switch.js
+
+**特别注意： md-switch不是ng-switch,它有着和复选框同样功能，但是呈现开关的外观。其动态效果就需要用到了拖动手势。**
+
+
+
+
+
 
 
 [谷歌Material Design原文](http://www.google.com/design/spec/material-design/introduction.html)
