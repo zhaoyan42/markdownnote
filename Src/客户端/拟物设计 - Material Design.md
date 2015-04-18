@@ -213,6 +213,31 @@ function dispatchEvent(srcEvent, eventType, eventPointer, /*original DOMEvent */
 ### 开关控件 - switch
 > MD本身的控件switch就有对拖动手势的使用，代码位置： src\components\switch\switch.js
 
+#### 手势服务$mdGesture
+前面手势实现的代码介绍了一大堆，都是内部实现原理，真正通过$mdGesture服务暴露出来的只有两个方法：
+
+##### 元素登记 - $mdGesture.register
+`$mdGesture.register` 用来把DOM元素注册到手势处理器中，从而可以侦听该手势事件。如ngSwitch就是如此初始化的：
+
+**为元素switchContainer登记拖动drag手势**
+```js
+$mdGesture.register(switchContainer, 'drag');
+```
+**侦听手势事件**
+```js
+switchContainer
+	.on('$md.dragstart', onDragStart)
+    .on('$md.drag', onDrag)
+    .on('$md.dragend', onDragEnd);
+```
+
+> 注意： 元素switchContainer就是ngSwitch控件的最外围的容器`'<div class="md-container">...</div>
+
+##### 自定义手势 - $mdGensture.handler
+
+#### 手势事件的使用
+
+
 **特别注意： md-switch不是ng-switch,它有着和复选框同样功能，但是呈现开关的外观。其动态效果就需要用到了拖动手势。**
 
 
