@@ -234,9 +234,76 @@ switchContainer
 > 注意： 元素switchContainer就是ngSwitch控件的最外围的容器`'<div class="md-container">...</div>
 
 ##### 自定义手势 - $mdGensture.handler
+$mdGensture暴露了另外一个方法`handler`,可以添加自定义的手势处理器,这是高级应用，需要了解上面手势的内部实现机制。
+这个手势处理器可以分别对三个事件侦听：
+```js
+onStart: function(ev){}
+onMove: function(ev, pointer) {}
+onEnd: function(ev, pointer) {}
+```
+然后在适当的时候，触发自定义的手势事件： 
+```js
+this.dispatchEvent(ev, 'eventName', this.state.dragPointer);
+```
 
-#### 手势事件的使用
+#### 手势事件的处理
+回到ngSwitch，看看它对三个事件的侦听后的处理，
+##### 首先DragStart事件
+我把一些处理和效果代码暂时屏蔽了， 剩下的就是一行代码，保存原始宽度到对象drag中，为后面的真正拖动做准备。
+```js
+function onDragStart(ev) {
+    ...
+    drag = {
+      width: thumbContainer.prop('offsetWidth')
+    };
+    ...
+  }
+```
+#####  Drag事件
+同样，屏蔽了一些非关键代码，主要代码如下：
+```js
+function onDrag(ev) {
+    if (!drag) return;
+	...
+    var percent = ev.pointer.distanceX / drag.width;
 
+    //if checked, start from right. else, start from left
+    var translate = ngModel.$viewValue ?  1 + percent : percent;
+    // Make sure the switch stays inside its bounds, 0-1%
+    translate = Math.max(0, Math.min(1, translate));
+
+    thumbContainer.css($mdConstant.CSS.TRANSFORM, 'translate3d(' + (100*translate) + '%,0,0)');
+    drag.translate = translate;
+  }
+```
+0. 首先如果没有drag对象时，就完全跳出流程。这是防错语句，因为该变量在onDragStart中必须设置的。
+0. 然后，计算拖拽点相对原始宽度的百分比。
+0. 调整百分比并赋给translate变量
+	1. 因为从右往左拖动时ev.pointer.distanceX是负数，而图标的也是从右往左（100%到0%）。所以用`1+percent`计算图标相对于左端点的相对百分比位置。
+	2. 限制百分比在0~100%之间。
+0. 用CSS的Transform命令，把 thumb在X轴移动对应的百分比
+0. 保存已经移动的百分比到对象drag中
+
+在Drag事件持续激发，指示图标就会持续移动到鼠标或手指触点的当前位置，从而呈现拖动的效果。
+
+##### DragEnd
+```js
+function onDragEnd(ev) {
+	if (!drag) return;
+	ev.stopPropagation();
+	
+	element.removeClass('md-dragging');
+	thumbContainer.css($mdConstant.CSS.TRANSFORM, '');
+	
+	// We changed if there is no distance (this is a click a click),
+	// or if the drag distance is >50% of the total.
+	var isChanged = ngModel.$viewValue ? drag.translate < 0.5 : drag.translate > 0.5;
+	if (isChanged) {
+	  applyModelValue(!ngModel.$viewValue);
+	}
+	drag = null;
+	}
+```
 
 **特别注意： md-switch不是ng-switch,它有着和复选框同样功能，但是呈现开关的外观。其动态效果就需要用到了拖动手势。**
 
