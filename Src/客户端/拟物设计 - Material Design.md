@@ -212,6 +212,7 @@ function dispatchEvent(srcEvent, eventType, eventPointer, /*original DOMEvent */
 
 ### 开关控件 - switch
 > MD本身的控件switch就有对拖动手势的使用，代码位置： src\components\switch\switch.js
+> ngSwitch是对CheckBox的视觉化扩展，背后的Model还是一样bool数值，但是视觉效果不再是一个可选框，而是一个可以左右拖动的滑条。
 
 #### 手势服务$mdGesture
 前面手势实现的代码介绍了一大堆，都是内部实现原理，真正通过$mdGesture服务暴露出来的只有两个方法：
@@ -287,12 +288,10 @@ function onDrag(ev) {
 在Drag事件持续激发，指示图标就会持续移动到鼠标或手指触点的当前位置，从而呈现拖动的效果。
 
 ##### DragEnd
+拖动结束事件的处理：
 ```js
 function onDragEnd(ev) {
-	if (!drag) return;
-	ev.stopPropagation();
 	
-	element.removeClass('md-dragging');
 	thumbContainer.css($mdConstant.CSS.TRANSFORM, '');
 	
 	// We changed if there is no distance (this is a click a click),
@@ -303,7 +302,16 @@ function onDragEnd(ev) {
 	}
 	drag = null;
 	}
+function applyModelValue(newValue) {
+    scope.$apply(function() {
+      ngModel.$setViewValue(newValue);
+      ngModel.$render();
+    });
+  }
 ```
+0. 清理CSS的Transform`thumbContainer.css($mdConstant.CSS.TRANSFORM, '');`
+1. 判断是否完成开关转换：如果拖拽位置超过一半，就认定为有效`isChanged`
+2. 如果是有效的拖动，就直接设置后台值`ngModel`，从而完成整个过程。
 
 **特别注意： md-switch不是ng-switch,它有着和复选框同样功能，但是呈现开关的外观。其动态效果就需要用到了拖动手势。**
 
