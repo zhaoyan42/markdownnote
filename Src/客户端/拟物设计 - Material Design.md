@@ -214,6 +214,8 @@ function dispatchEvent(srcEvent, eventType, eventPointer, /*original DOMEvent */
 > MD本身的控件switch就有对拖动手势的使用，代码位置： src\components\switch\switch.js
 > ngSwitch是对CheckBox的视觉化扩展，背后的Model还是一样bool数值，但是视觉效果不再是一个可选框，而是一个可以左右拖动的滑条。
 
+**特别注意： md-switch不是ng-switch,它有着和复选框同样功能，但是呈现开关的外观。其动态效果就需要用到了拖动手势。**
+
 #### 手势服务$mdGesture
 前面手势实现的代码介绍了一大堆，都是内部实现原理，真正通过$mdGesture服务暴露出来的只有两个方法：
 
@@ -313,11 +315,16 @@ function applyModelValue(newValue) {
 1. 判断是否完成开关转换：如果拖拽位置超过一半，就认定为有效`isChanged`
 2. 如果是有效的拖动，就直接设置后台值`ngModel`，从而完成整个过程。
 
-**特别注意： md-switch不是ng-switch,它有着和复选框同样功能，但是呈现开关的外观。其动态效果就需要用到了拖动手势。**
 
 
 
-
+### mdTabs
+大概因为mdTabs代码太多，它的定义不是一个js文件，而是好几个集中在一个文件夹中：src/components/tabs/js/ ,而在其根目录放了一个启动文件 src/components/tabs/tabs.js。这个文件只是简单的定义了模块`tabs`,所以可以看做是一个启动代码：
+```js
+angular.module('material.components.tabs', [
+  'material.core'
+]);
+```
 
 
 
