@@ -318,13 +318,43 @@ function applyModelValue(newValue) {
 
 
 
-### mdTabs
-大概因为mdTabs代码太多，它的定义不是一个js文件，而是好几个集中在一个文件夹中：src/components/tabs/js/ ,而在其根目录放了一个启动文件 src/components/tabs/tabs.js。这个文件只是简单的定义了模块`tabs`,所以可以看做是一个启动代码：
+### 模块Tabs
+因为Tabs不是一个简单控件，定义标签太多，它不只有一个js文件，而是好几个集中在一个文件夹中：src/components/tabs/js/ ,而在其根目录放了一个启动文件 src/components/tabs/tabs.js。这个文件只是简单的定义了模块`tabs`,所以可以看做是一个启动代码：
 ```js
 angular.module('material.components.tabs', [
   'material.core'
 ]);
 ```
+#### 标签mdTabs
+显然，第一个标签就是`mdTabs`,定义它的文件是： src/components/tabs/js/tabDirective.js
+从名称很容易猜到，这个标签是最外层的大容器，用来包容单个`mdTab`项。
+##### mdTabs使用
+典型用法如下,并不复杂：
+```html
+<md-tabs>
+	<md-tab label="Tab #1"></md-tab>
+	<md-tab label="Tab #2"></md-tab>
+	<md-tab label="Tab #3"></md-tab>
+</md-tabs>
+```
+#### mdTabs处理
+当Angular编译遇到<mdTabs>,它替换为两部分:Header和content
+```html
+<section class="md-header">
+...
+</section>
+<section class="md-tabs-content"></section>
+```
+Header部分用的不多，不去研究，大部分的变化还在内容部分，那些是在标签mdTab中实现的。mdTabs的后台处理并不多，只是监测`selectedIndex`的变化。当监测到客户端或别的来源导致`selectedIndex`有变动时，调用Controller切换界面的当前(可视）tab。
+```js
+scope.$watch('selectedIndex', function watchSelectedIndex(newIndex, oldIndex) {
+	...
+	var newTab = tabsCtrl.itemAt(newIndex);
+	...
+	tabsCtrl.select(newTab, rightToLeft);
+}
+```
+
 
 
 
