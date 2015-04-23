@@ -342,7 +342,7 @@ angular.module('material.components.tabs', [
 	<md-tab label="Tab #3"></md-tab>
 </md-tabs>
 ```
-#### mdTabs处理
+#### mdTabs标签
 当Angular编译遇到<mdTabs>,它替换为两部分:Header和content
 ```html
 <section class="md-header">
@@ -360,6 +360,17 @@ scope.$watch('selectedIndex', function watchSelectedIndex(newIndex, oldIndex) {
 }
 ```
 
+#### mdTab标签
+mdTab嵌套在mdTabs之内，来定义每一个Tab。每个Tab由两部分组成：label和content。
+label有三种方式来定义：
+0. 用属性label来定义
+1. 用标签`<md-tab-label>`
+2. 如果上面两个都没有，mdTab会把content自动设为label
+
+Content
+任何非`<md-tab-label>`的部分，自动转化为内容，并用`<div class="md-tabs-content">`封装起来。
+
+不像其他控件,mdTab没有直接替换的HTML模板，而是全部用在compile中用javascript生成。
 
 
 
