@@ -30,6 +30,14 @@ Scope的唯一id号
 ### Element和Attribute
 Directive可以定义为Element(标识)也可以定义为标识的属性。 更为强大的架构就是综合应用这两种功能，用属性定义来改变或增强原Element的功能。
 
+
+## Html编译器和指令
+> 指令有时候更像一个组件，用html的元素的语法定义自己的组件和功能；更可以看作是对Html语义的扩充。
+https://docs.angularjs.org/guide/compiler
+
+### 编译
+在Angular编译过程中，$compile会寻找自定义的指令，然后编译成目标代码。
+
 ## 模块模式 - Module Pattern
 
 > 模块模式是一个设计模式，它能够消除大量重复的 `this` 和`prototype`使用。 Angular Material就使用这个模式开发模块代码 [Angular Material Coding Conventions and Guidelines](https://github.com/angular/material/blob/master/docs/guides/CODING.md)

@@ -371,6 +371,32 @@ Content
 任何非`<md-tab-label>`的部分，自动转化为内容，并用`<div class="md-tabs-content">`封装起来。
 
 不像其他控件,mdTab没有直接替换的HTML模板，而是全部用在compile中用javascript生成。
+##### compile
+>简单理解Angular中的编译compile，就是把自定义的元素替换成预定义模板的过程。
+>比如`<sk-field/>`编译（替换）成`<label></label><input type="text" />`
+
+mdTab的compile本身只做了一件事情：把原定义的label和content全部从DOM树中移去，暂存在内部变量`tabLabel`和`tabContent`。然后就返回`postLink()`函数。
+```js
+var tabLabel = element.find('md-tab-label');
+
+if (tabLabel.length) {
+  	tabLabel.remove();
+} else if (angular.isDefined(attr.label)) {
+  	tabLabel = angular.element('<md-tab-label>').html(attr.label);
+} else {
+  	tabLabel = angular.element('<md-tab-label>')
+		.append(element.contents().remove());
+}
+
+// Everything that's left as a child is the tab's content.
+var tabContent = element.contents().remove();
+
+return function postLink(scope, element, attr, ctrls) {
+	...
+}
+```
+
+#### postLink
 
 
 
