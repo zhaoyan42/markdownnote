@@ -576,6 +576,33 @@ CSS效果的SCSS定义
 ```js
 $animate.removeClass(self.contentContainer, 'ng-hide');
 ```
+CSS3的强大动画功能，另文讨论。
+
+#### 渲染风格
+> 渲染的不仅仅是风格，还有布局
+##### 头脚倒置
+当设置`md-align-tabs='bottom'`时，可以把行头放到内容的下面。这个行为完全使用CSS实现的。
+```scss
+&[md-align-tabs="bottom"] {
+    md-tabs-wrapper {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: $tabs-header-height;
+    }
+    md-tabs-content-wrapper {
+      top: 0;
+      bottom: $tabs-header-height;
+    }
+}
+```
+如前面所说，这是属于布局的范畴，尽管使用CSS实现的功能，在HTML中确实用属性来标示，而不是用CSS类。
+```html
+<md-tabs md-align-tabs="'bottom'">
+	...
+</md-tabs>
+```
 
 [谷歌Material Design原文](http://www.google.com/design/spec/material-design/introduction.html)
 
