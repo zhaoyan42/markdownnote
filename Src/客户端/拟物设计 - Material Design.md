@@ -397,8 +397,185 @@ return function postLink(scope, element, attr, ctrls) {
 ```
 
 #### postLink
+link如其名，用于实现动态性能，和compile在完全不同的周期。由于tab组件本身的特性，大部分功能都在link中完成，因为tab都是动态显示的。
+##### Tab的切换
+第一步就是监控Tab的变化，当前究竟是哪个tab完全通过attr.label来确定。
+```js
+scope.$watch(
+	function () { return attr.label; },
+	function () { $timeout(function () { tabsCtrl.scope.$broadcast('$mdTabsChanged'); }, 0, false); }
+);
+```
+$watch监测到attr.label的变化后，就发出广播消息`$mdTabsChanged`。有任何对此变化感兴趣的可以侦听这个事件。
 
+##### 添加Tab内容
+在compile中已经把所有的内容隐藏了，这里需要把它们再加回来
+```js
+function transcludeTabContent() {
+	// Clone the label we found earlier, and $compile and append it
+	var label = tabLabel.clone();
+	element.append(label);
+	$compile(label)(scope.$parent);
+	
+	// Clone the content we found earlier, and mark it for later placement into
+	// the proper content area.
+	tabItemCtrl.content = tabContent.clone();
+}
+```
+注意到，label部分不光是加回来，还有进行编译并绑定上下文scope
+##### 点击波纹效果
+给tab头添加点击波纹效果，据说它的波纹服务是内部使用，不公开，因此没有文档。
+```js
+var detachRippleFn = $mdInkRipple.attachTabBehavior(scope, element, {
+	colorElement: tabsCtrl.inkBarElement
+});
+```
+##### 事件绑定
+###### 控制器嵌套
+把tab本身的控制器加入到tabs的控制器，tab才真正活起来，内部其实就是事件绑定和变量联系。
+```js
+tabsCtrl.add(tabItemCtrl);
+```
+###### 资源释放- Destroy 
+然后是上下文scope和DOM的销毁事件绑定，确保资源释放并发出消息。
+```js
+scope.$on('$destroy', function() {
+	detachRippleFn();
+	tabsCtrl.remove(tabItemCtrl);
+});
+element.on('$destroy', function () {
+//-- wait for item to be removed from the dom
+$timeout(function () {
+	tabsCtrl.scope.$broadcast('$mdTabsChanged');
+	}, 0, false);
+});
+```
+###### 点击切换Tab
+默认行为，点击tab的头部表示选择该tab
+```js
+if (!angular.isDefined(attr.ngClick)) {
+	element.on('click', defaultClickListener);
+}
 
+function defaultClickListener() {
+	scope.$apply(function() {
+		tabsCtrl.select(tabItemCtrl);
+		tabsCtrl.focus(tabItemCtrl);
+	});
+}
+```
+###### 键盘切换Tab
+绑定键盘事件：
+```js
+element.on('keydown', keydownListener);
+```
+`keydownListener`对不同按钮的处理：
+空格键和回车键与点击等价：
+```js
+if (ev.keyCode == $mdConstant.KEY_CODE.SPACE || ev.keyCode == $mdConstant.KEY_CODE.ENTER ) {
+  // Fire the click handler to do normal selection if space is pressed
+  element.triggerHandler('click');
+  ev.preventDefault();
+}
+```
+左箭头切换到前一个tab
+```js
+ else if (ev.keyCode === $mdConstant.KEY_CODE.LEFT_ARROW) {
+  scope.$evalAsync(function() {
+    tabsCtrl.focus(tabsCtrl.previous(tabItemCtrl));
+  });
+} 
+```
+右箭头切换到下一个tab
+```js
+else if (ev.keyCode === $mdConstant.KEY_CODE.RIGHT_ARROW) {
+  scope.$evalAsync(function() {
+    tabsCtrl.focus(tabsCtrl.next(tabItemCtrl));
+  });
+}
+```
+###### npRepeat的特别处理
+当我们使用ngRepeat来自动呈现多个tab时，需要作出特别处理，我们需要侦听npRepeat中$index的变化。
+```js
+if (angular.isNumber(scope.$parent.$index)) {
+	watchNgRepeatIndex();
+}
+// If tabItemCtrl is part of an ngRepeat, move the tabItemCtrl in our internal array
+// when its $index changes
+function watchNgRepeatIndex() {
+	// The tabItemCtrl has an isolate scope, so we watch the $index on the parent.
+	scope.$watch('$parent.$index', function $indexWatchAction(newIndex) {
+	  tabsCtrl.move(tabItemCtrl, newIndex);
+	});
+}
+```
+#### $mdTabs控制器
+#### select
+这是$mdTabs控制器最重要的一个方法，因为这个就是tab切换的真正实现代码，在mdTab指令的postLink多次使用。
+```js
+function select(tab, rightToLeft) {
+```
+这个方法有两个调用参数`tab`（其实是tabCtrl)和方向
+一堆防错语句之后，首先撤离当前选择的tab（反选择）,这个过程与select完全相反。
+```js
+deselect(getSelectedItem(), rightToLeft);
+```
+然后才是真正的操作:
+```js
+$scope.selectedIndex = indexOf(tab);
+tab.isSelected = true;
+tab.onSelect(rightToLeft);
+```
+前两个是简单设置变量：selectIndex和isSelected.
+最后一步这是调用tab控制器的onSelect:
+```js
+  function onSelect(rightToLeft) {
+```
+恢复上下文绑定
+```js
+$mdUtil.reconnectScope(self.contentScope);
+```
+加入css样式
+```js
+$element
+  .addClass('active')
+  .attr({
+    'aria-selected': true,
+    'tabIndex': 0
+  })
+```
+加入划动相应（屏幕事件）
+```js
+ .on('$md.swipeleft $md.swiperight', onSwipe);
+```
+最后，加入进入进出屏幕效果,同样通过CSS实现
+```js
+  toggleAnimationClass(rightToLeft);
+
+  function toggleAnimationClass(rightToLeft) {
+    self.contentContainer[rightToLeft ? 'addClass' : 'removeClass']('md-transition-rtl');
+  }
+```
+CSS效果的SCSS定义
+```scss
+&.ng-hide-add {
+    transform: translateX(-100%);
+    &.md-transition-rtl {
+      transform: translateX(100%);
+    }
+  }
+&.ng-hide-remove {
+  transform: translateX(100%);
+  &.md-transition-rtl {
+    transform: translateX(-100%);
+    }
+  }
+```
+从CSS可以看到，加入的效果只有在ng-hide的添加和移除的时候才开始作用。
+因此最后还有一个移除`ng-hide`的语句。
+```js
+$animate.removeClass(self.contentContainer, 'ng-hide');
+```
 
 [谷歌Material Design原文](http://www.google.com/design/spec/material-design/introduction.html)
 
