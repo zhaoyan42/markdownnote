@@ -65,10 +65,71 @@ Angular Material的 响应式CSS布局是基于flexbox实现的。整个布局�
 
 ## 风格 
 ### 色彩
+术语：
+* hue/shade - 一个hue或者shade就是调色板中的一种颜色
+* Palette 调色板 - 一个调色板就是一系列的颜色；MD提供了预设计的很多调色板：如红色系，粉红色系等的。
+* 配色 - 你的应用预定义三类配色：主色，强调色（辅色），警告色。配色是应用色彩设计的抽象，与具体色板颜色独立。
+* 主题 - 色板到三类配色的映射配置就可以看做一个主题，主题还包括背景色的配置
+
+#### 主题
+主题的概念可以让你的界面保持一致的风格，主题定义了表面的暗度， 阴影的层次和文字的透明度。主题一般还分别定义暗主题和亮主题，以供选择。
+
+如，亮主题：
+600灰 - 状态条
+300灰 - 主界面头
+200灰 - 背景色
+50灰  - 卡片色或对话框色
+
+暗主题：
+100%黑 - 状态条
+900灰 - 主界面头
+850灰 - 背景色 （850是估计值，因为不是标准推荐色颜值#303030）
+800灰  - 卡片色或对话框色
+
+##### MD组件配色
+MD使用类来给组件指定配色，对应三类配色，这些类名为：`md-primary`, `md-accent`, `md-warn`
+```html
+<md-button class="md-primary">Click me</md-button>
+<md-button class="md-accent">or maybe me</md-button>
+<md-button class="md-warn">Careful</md-button>
+```
+如果你想稍微调整一下原始配色，可以应用另外一些类：`md-hue-1`, `md-hue-2`, 或`md-hue-3`。但是，使用要谨慎，不要过多直接修正颜色。
+```html
+<md-button class="md-primary">Click me</md-button>
+<md-button class="md-primary md-hue-1">Click me</md-button>
+<md-button class="md-primary md-hue-2">Click me</md-button>
+```
+##### 配置你的主题
+默认情况下，MD使用默认主题:
+* 主色 - 紫藍色 indigo
+* 辅助色 - 粉色 pink
+* 警告色 - 红色 red
+* 背景 - 灰色 grey
+
+要修改默认主题配置，需要在程序配置中调用`$mdThemingProvider`
+###### 设置配色
+你可以调用`$mdThemingProvider`方法`theme.primaryPalette`, `theme.accentPalette`, `theme.warnPalette`,`theme.backgroundPalette`来分别设置各个配色：
+```js
+angular.module('myApp', ['ngMaterial'])
+.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('pink')
+    .accentPalette('orange');
+});
+```
+你还可以调用`theme.dark()`方法来指定一个主题为暗主题。
+```js
+angular.module('myApp', ['ngMaterial'])
+.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .dark();
+```
+
 #### 颜色的应用
-> MD定义两类颜色体系：主色系(Primary colors)和强调色系(Accent colors)
-> MD建议了500种颜色作为备选的主色系和其他一些颜色作为备选的强调色系。
+
+
 ##### 你的调色板
+MD提供了500种颜色作为备选的主色系和其他一些颜色作为备选的强调色系。
 从备选颜色中选择三种颜色组成你自己主色系，从备选颜色中选择一种颜色组成你的强调色系。
 这三个主色和强调色就组成了你的调色板。
 
@@ -99,20 +160,6 @@ Angular Material的 响应式CSS布局是基于flexbox实现的。整个布局�
 0. 不要把强调色应用在大面积的区域，也不要把浮动的按钮和背景设为一种颜色。 
 0. 如果你的强调色和背景色的对比度不够（太暗或太亮），可以适当调整亮度适应这种情况。如果即使这样也不行，就是用你主色的500系作为文字颜色，白色做底色；如果已经用主色做底色，就用100%白色或54%黑色做文字色。
 
-#### 主题风格
-主题的概念可以让你的界面保持一致的风格，主题定义了表面的暗度， 阴影的层次和文字的透明度。主题一般还分别定义暗主题和亮主题，以供选择。
-
-如，亮主题：
-600灰 - 状态条
-300灰 - 主界面头
-200灰 - 背景色
-50灰  - 卡片色或对话框色
-
-暗主题：
-100%黑 - 状态条
-900灰 - 主界面头
-850灰 - 背景色 （850是估计值，因为不是标准推荐色颜值#303030）
-800灰  - 卡片色或对话框色
 
 
 
