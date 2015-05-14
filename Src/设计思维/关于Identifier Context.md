@@ -12,7 +12,8 @@ BusinessIdentifier定义：
 - 用Composite标记复合Identifier
 - 用Component标记组件字段
 - 每个Identifier定义都需要加上CodeName标记，用于标识名称
->
+
+----------
 
 	[Composite()]
     [CodeName("Exam")]
