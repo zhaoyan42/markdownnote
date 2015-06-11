@@ -7,4 +7,4 @@ Flux应用有三主要部分：
 * stores 很多仓储 
 * views 很多视图
 
-不要把这三个概念和 MVC模式混淆， Flux  
+不要把这三个概念和 MVC模式混淆， 但是Flux中的确有Controller， 但是它只是使用Controller-Views， 
