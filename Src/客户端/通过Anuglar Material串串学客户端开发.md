@@ -1,4 +1,4 @@
-# 通过Anuglar Material串串学客户端开发 - NodeJS模块机制之Module.Exports
+# 通过Anuglar Material串串学客户端开发
 > [Angular Material](https://github.com/angular/material)不仅仅有本身框架的源代码，还有在这个框架上实现的一个应用[docs](https://github.com/angular/material/tree/master/docs)。更为强大的是，这个应用是真正的产品网站：就是它的[官网](https://material.angularjs.org/latest/#/)。我有理由相信，这个网站是从源代码直接发布的，从网址的最后那个`/latest`,我们可以看出端倪。
 
 > 从这个产品本身入手不失为学习的捷径。
@@ -27,8 +27,8 @@ C/C#命令行的应用，我们会寻找`Main()`方法；C#的Web应用我们会
 
 一直以来，javascript最大的诟病就是全局变量，这也成为大型应用开发的最大阻碍。因此，很多人使用了很多方式来解决这个问题。如模块模式（Module Pattern), 而node.js这实现了模块装载系统，来解决组件实现的基本问题。
 
-自从开始研究前端，我也几个相关的关键词在眼前晃荡， `require()` `exports`等等。当时，因为注意力在其他方面，一直也没下决心研究清楚。 就如下面文章中所讲：
-〉作为开发人员常常面临这样的困境：当我们使用不熟悉的代码（库）时，我们究竟要花多少时间来研究它的原理和实现，这个研究又要有多深呢？经典答案就是，学习到足够可以开始写代码就可以了，等到时间容许在进一步深入研究。
+自从开始研究前端，我也几个相关的关键词在眼前晃荡， `require()` `exports`等等。当时，因为注意力在其他方面，一直也没下决心研究清楚。 就如下面[文章](http://www.sitepoint.com/understanding-module-exports-exports-node-js/) 中所讲：
+> 作为开发人员常常面临这样的困境：当我们使用不熟悉的代码（库）时，我们究竟要花多少时间来研究它的原理和实现，这个研究又要有多深呢？经典答案就是，学习到足够可以开始写代码就可以了，等到时间容许在进一步深入研究。
 
 那么现在就是深入研究 `module.exports`的时候了！
 
@@ -52,7 +52,7 @@ sayHelloInSpanish = function() {
 ```js 
 // var exports = module.exports ={};
 ```
-#### ii> 把任何要重用（导出）的函数，赋值给`exports`
+#### ii> 把任何要重用（导出）的函数，赋值给exports
 ```js
 exports.sayHelloInEnglish = function() {
 	return "Hello";
@@ -86,7 +86,7 @@ module.exports = {
 
 ### 导入/使用模块
 我们准备在main.js中导入和使用greetings.js中的所有函数。
-#### i> 关键词`require`
+#### i> 关键词require
 `require`是nodejs用来导入模块的关键词。想象一下require的定义如下 （怎么又是想象?)
 ```js
 var require =function(path){
