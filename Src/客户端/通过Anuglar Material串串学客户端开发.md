@@ -195,5 +195,41 @@ Module._load = function(request, parent, isMain) {
 	//6. return module.exports
 };
 ```
+Module._load负责装载新模块和管理模块的缓存。缓存机制在每个模块载入时减少重复读取文件，从而提高系统性能。另外，共享模块实例还可以使得单例模块在整个项目中保留状态。
+如果在缓存中没有找到该模块，Module._load就会为该文件创建一个新的Module实例。并用该实例读取文件内容，然后发送给Module._compile。
+注意到在上面第6步，返回了module.exports。这个返回语句可以解释，为什么在你的模块文件中要把公开的接口（方法）赋给module.exports(或者别名exports)；这也解释了，require()返回的变量，可以直接调用导入模块的方法。到此，可以看到没有任何神奇或特别的地方。
+
+### module._compile
+```js
+Module.prototype._compile = function(content, filename) {
+	// 1. Create the standalone require function that calls module require.
+	// 2. Attach other helper methods to require.
+	// 3. Wraps the JS code in a function that provides require, module, etc. variables locally to the module scope.
+	// 4. Run that function.
+```
+这个方法，一开始就创建require函数，这就是我们非常熟悉的那个`require()`(模块装载机制不仅仅有载入模块的处理，也有导入和调用的流程，这里可以看作调用方的流程，如我们提到的main.js)。而这个个函数本身只是简单的封装了Module.require和添加了一些帮助属性和方法，如下：
+
+* require() 就是我们使用的require()
+* require.main 主模块
+* require.cache 所有缓存的模块
+* require.extensions 不同文件类型（后缀）的编译方法
+
+在构建require之后，所有原文件的代码被封装的一个新函数中，这个函数把require,module,exports作为参数。 这也可以解释为什么我们可以直接调用require(),为什么exports是module.exports的别名。
+```js
+(function(exports,require, module, __filename, __dirname){
+	//原模块文件的所有代码注入在这
+});
+```
+了解模块模式(Module Pattern)的人，很容易看出这段看时毫无意义的重新分帐，就是模块模式，就是为了防止模块文件中的定义污染系统的命名空间（记住javascript时全局变量）。
+最后，这个新创建的函数直接被运行，这其实也是完整模块模式的一部分,最后那对空括弧就是运行部分：
+```js
+(function(...){
+	//...
+})();
+```
+> 如果不熟悉模块模式(Module Patter)，可以看看我另外一篇文章[深入探索AngularJS](http://kb.skight.com/客户端/深入探索AngularJS.html)的一个章节《模块模式 - Module Pattern》
+
+### 小结
+至此，我们就走完了模块加载的全部流程。从创建模块module.exports到调用require,以及调用实现的内部过程。虽然这些对你代码还没有任何影响，原来该怎么做还怎么做。但是，可以让你写同样代码时，心里更有底，不再强行记忆模块的语法。最重要的事通过学习良好的代购架构，提高自己的架构水平。
 
 
