@@ -1,9 +1,31 @@
 ## 概念
 - Identifier 标识，用于唯一标识一个对象
 - Context 上下文、语境，表现形式为键值对，例如“Person/123456”、或者多个值的组合“Exam/02^99^2015-05-14”
-- Composite 复合，表明该对象由若干个部分组成
-- Component 组件，用于组成复合对象的部分
+－ Web应用的上下文全部体现在Url 
+－ 可阅读的Url
 
+## 业务唯一标识 BusinessIdentifier
+
+### 来源于业务，贯穿于系统的始终 (取代 GUID和DBID) 
+#### 用户容易理解，容易识别
+#### 有利于系统扩展性
+#### 分布系统的根基
+#### 系统性能终极解决之道
+
+### 应用于聚合的根
+和DDD聚合根的概念非常吻合
+聚合根是系统功能的起点，这个起点落实在业务标识
+
+### 业务标识的结构设计
+#### 业务标识本身是值对象 （Value Object） 
+* Immutable Object (恒值对象)
+* C# struct 实现（技术上的契合度，不一定要用struct来实现）
+* 对string的封装，看作强类型的string (用FullCode表示)
+	
+	???
+	FullCode为 “001” 的老师(TeacherIdentifier)和FullCode为“001”学生(StudentIdentifier)是完全不同的 
+
+#### 
 ## 使用
 BusinessIdentifier定义：
 
