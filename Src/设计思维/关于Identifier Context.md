@@ -53,8 +53,8 @@
 	- 通过解析FullCode,用反射方式还原为强类型的标识对象，和组合标识的子标识。需要递归。
 
 #### 代码
-#####创建
-#####简单标识
+##### 创建
+##### 简单标识
 ```csharp
 	public struct SequenceIdentifier : BusinessIdentifier
     {
@@ -66,7 +66,7 @@
 
 ```
 
-#####组合标识
+##### 组合标识
 ```chsharp
     public struct CandidateIdentifier : BusinessIdentifier
     {
@@ -120,23 +120,22 @@
 
 ```
 
-######解析器的关键代码1: 获取组件标识的解析器
-
+###### 解析器的关键代码1: 获取组件标识的解析器
 ```csharp
 var arg_parser = (BusinessIdentifierParser) Container.current.get_an(typeof (BusinessIdentifierParser<>).MakeGenericType(arg_type));
 ```
 
-######解析器的关键代码2: 简单标识的参数直接转换
+###### 解析器的关键代码2: 简单标识的参数直接转换
 ```csharp
 args.Add(Convert.ChangeType(codes[code_cursor],arg_type));
 ```
 
-######解析器的关键代码3: 用反射生成标识对象（结构）
+###### 解析器的关键代码3: 用反射生成标识对象（结构）
 ```csharp
  var result = (T) Activator.CreateInstance(typeof (T), args.ToArray());
 ```
 
-#####持久化 
+##### 持久化 
 ```csharp
   public abstract class BusinessIdentifierType<T> : IUserType where T : BusinessIdentifier
     {
