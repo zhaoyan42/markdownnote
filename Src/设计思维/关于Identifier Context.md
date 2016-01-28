@@ -16,8 +16,9 @@
 - DBId应用于聚合内部对象之间的联系，特别是在ORM的帮助下，表现为对象之间的引用
 
 ### 应用于聚合的根
-和DDD聚合根的概念非常吻合
-聚合根是系统功能的起点，这个起点落实在业务标识
+* 和DDD聚合根的概念非常吻合
+* 聚合根是系统功能的起点，这个起点落实在业务标识
+* RESTful的角度: 对于一个资源（Resource），给定一个业务标识就可以唯一确定资源的一个实例（对象）
 
 ### 业务标识的结构设计
 #### 业务标识本身是值对象 （Value Object） 
@@ -35,6 +36,161 @@
 - Value Object定义的FullCode把标识平面化
 - Immutable把标识逻辑和运行流程简化 
  
+### 业务标识的实现
+#### 设计时，“注入时”与运行时
+#### 生命周期
+- 创建
+	- 简单标识： 包含的原始数据类型 （如SequenceIdentifier用int）
+	- 组合标识： 组件标识
+	- 因为不可修改，业务标识对象有且只有一个包括以上信息的构造器
+	- 在域中，才能创建一个业务标识（创建新业务对象才需要创建新的业务标识）
+	- 在域中，客户代码必须有足够的业务标识知识（知道而且能够提供足够数据调用其构造器）
+- 持久化 
+	- 仅仅持久化FullCode
+- 反持久化 
+	- 反持久化不是创建新业务标识
+	- 反持久化只是把沉睡的数据唤醒
+	- 通过解析FullCode,用反射方式还原为强类型的标识对象，和组合标识的子标识。需要递归。
+
+#### 代码
+#####创建
+#####简单标识
+```csharp
+	public struct SequenceIdentifier : BusinessIdentifier
+    {
+        public SequenceIdentifier(int sequence_no):this()
+        {
+            FullCode = sequence_no.ToString();
+        }
+    ｝
+
+```
+
+#####组合标识
+```chsharp
+    public struct CandidateIdentifier : BusinessIdentifier
+    {
+        public string FullCode { get; private set; }
+
+        public CandidateIdentifier(SceneIdentifier scene_identifier, SequenceIdentifier sequence_identifier)
+            :this()
+        {
+            Scene = scene_identifier;
+            Sequence=sequence_identifier;
+            FullCode= BusinessIdentifierExtensions.compose(Scene, Sequence);
+        }
+        public SceneIdentifier Scene { get;private set; }
+        public SequenceIdentifier Sequence { get;private set; }
+   }
+```
+
+#####FullCode解析器
+###### 完整代码
+```csharp
+ public class BusinessIdentifierParser<T> : BusinessIdentifierParser
+        where T:BusinessIdentifier
+    {
+      public T parse(string[] codes)
+        {
+           
+            var code_cursor = 0;
+            var args = new List<object>();
+            foreach (var arg_type in ComponentTypes)
+            {
+                if (IsComposited)
+                {
+                    var arg_parser = (BusinessIdentifierParser) Container.current.get_an(typeof (BusinessIdentifierParser<>).MakeGenericType(arg_type));
+                    var codes_count = arg_parser.count_deep_component();
+                    var arg = arg_parser.parse(codes.take(code_cursor, codes_count));
+                    args.Add(arg);
+                    code_cursor +=  codes_count;
+                }
+                else
+                {
+                    args.Add(Convert.ChangeType(codes[code_cursor],arg_type));
+                    code_cursor++;
+                }
+              
+            }
+           
+            var result = (T) Activator.CreateInstance(typeof (T), args.ToArray());
+            return result;
+        }
+	}    
+
+```
+
+######解析器的关键代码1: 获取组件标识的解析器
+
+```csharp
+var arg_parser = (BusinessIdentifierParser) Container.current.get_an(typeof (BusinessIdentifierParser<>).MakeGenericType(arg_type));
+```
+
+######解析器的关键代码2: 简单标识的参数直接转换
+```csharp
+args.Add(Convert.ChangeType(codes[code_cursor],arg_type));
+```
+
+######解析器的关键代码3: 用反射生成标识对象（结构）
+```csharp
+ var result = (T) Activator.CreateInstance(typeof (T), args.ToArray());
+```
+
+#####持久化 
+```csharp
+  public abstract class BusinessIdentifierType<T> : IUserType where T : BusinessIdentifier
+    {
+      public void NullSafeSet(IDbCommand cmd, object obj, int index)
+        {   
+        var id = (T)obj;
+        ((IDataParameter)cmd.Parameters[index]).Value = id.FullCode;
+         
+        }
+	｝
+```
+
+##### 反持久化
+```csharp
+  public abstract class BusinessIdentifierType<T> : IUserType where T : BusinessIdentifier
+    {
+      public object NullSafeGet(IDataReader dr, string[] names, object ower)
+        {
+            object obj = NHibernateUtil.String.NullSafeGet(dr, names[0]);
+            if (obj == null) return null;
+            var value = (string)obj;
+            var parser =(BusinessIdentifierParser) Container.current.get_an(typeof (BusinessIdentifierParser<>).MakeGenericType(typeof (T)));
+            var result = parser.parse(value);
+            return result; 
+        }
+	｝
+
+```
+
+##### Url中解析
+```csharp
+	public class ContextDataServiceImpl : ContextDataService
+   {
+    	public object get_data_by(ContextDataKey key, string value)
+        {
+            if (key.Equals(Keys.Context.Candidate))
+            {
+                return Container.get<BusinessIdentifierParser<CandidateIdentifier>>()
+                    .parse(value);
+            }
+            if (key.Equals(Keys.Context.Exam))
+            {
+                return Container.get<BusinessIdentifierParser<ExamIdentifier>>()
+                   .parse(value);
+             
+            }
+            if (key.Equals(Keys.Context.Scene))
+            {
+                return Container.get<BusinessIdentifierParser<SceneIdentifier>>()
+                 .parse(value);
+            }
+		｝
+	｝         
+```
 
 ## 使用
 BusinessIdentifier定义：
