@@ -44,7 +44,7 @@
 		  rootDirectory: 'dist',
 		  useFileNameAsTitle: true,
 		  generatePage: true,
-          stylesheet: 'kb/Style.css'
+          stylesheet: 'Style.css'
 		},
 		files: {		 
 		  'dist/kb/Index.html': 'dist/kb/**/*.html',
