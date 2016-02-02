@@ -26,8 +26,14 @@
 		   expand: true,
 		   cwd: 'Templates/',
 		   src: ['**/*.css'],
-		   dest: 'dist/'
-		 }
+		   dest: 'dist/kb'
+		 },
+		{
+			expand: true,
+			cwd: 'Templates/',
+			src: ['**/*.css'],
+			dest: 'dist/icewine'
+		}
 		]
 	  }
 	},
@@ -38,10 +44,11 @@
 		  rootDirectory: 'dist',
 		  useFileNameAsTitle: true,
 		  generatePage: true,
-          stylesheet: '/Style.css'
+          stylesheet: 'kb/Style.css'
 		},
 		files: {		 
-		  'dist/Index.html': 'dist/**/*.html'
+		  'dist/kb/Index.html': 'dist/kb/**/*.html',
+			'dist/icewine/Index.html':'dist/icewine/**/*.html'
 		}
 	  }
 	},
