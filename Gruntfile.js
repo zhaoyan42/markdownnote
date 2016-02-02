@@ -28,14 +28,24 @@
 		   src: ['**/*.css'],
 		   dest: 'dist/kb'
 		 },
-		{
-			expand: true,
-			cwd: 'Templates/',
-			src: ['**/*.css'],
-			dest: 'dist/icewine'
+			{
+				expand: true,
+				cwd: 'Templates/',
+				src: ['**/*.css'],
+				dest: 'dist/icewine'
+			}
+			]
+	  },
+		picture: {
+			files: [
+				{
+					expand: true,
+					cwd: 'Src/',
+					src: ['**/*.png', '**/*.jpg', '**/*.gif'],
+					dest: 'dist/'
+				}
+			]
 		}
-		]
-	  }
 	},
 	generate_index:{
 	  main:{	    
