@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html class="default-theme">
+<head>
+  <title>卓逸天成</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <style type="text/css">
+	  img{
+		max-width:100%;
+		max-height:100%;
+	  }
+	  
+    body {
+      font-family: Lato;
+    }
+
+    h1, h2, h3 {
+      font-weight: normal;
+    }
+
+    .remark-code,
+    .remark-inline-code {
+      font-family: PragmataPro, Menlo;
+    }
+
+    .underscore {
+      font-size: 180%;
+    }
+
+    .underscore a {
+      text-decoration: none;
+    }
+
+    .underscore h1 {
+      text-align: center;
+    }
+
+    .title > h1 {
+      font-size: 300%;
+    }
+
+    .title > h2  {
+      margin-top: -5%;
+      font-size: 100%;
+    }
+
+    .title img {
+      margin-bottom: -20%;
+    }
+
+    ol {
+      margin: 0;
+      padding: 0;
+      line-height: 60px;
+      text-align: center;
+      list-style-type: none;
+    }
+
+    blockquote {
+      font-size: 200%;
+    }
+
+    .wide {
+      margin: 0;
+      padding: 0;
+    }
+
+    table {
+      font-weight: lighter;
+      padding: 0;
+      border: 0;
+      border-collapse: collapse;
+      border-spacing: 0;
+      border: 2pt solid silver;
+      margin-left: 5%;
+      margin-right: 5%;
+      width: 90%;
+    }
+
+    td,th {
+      padding: .5em;
+      border: 1pt solid silver;
+      font-weight: normal;
+    }
+
+    th {
+      background-color: #3E505D;
+      color: white;
+    }
+    html.default-theme .remark-slide-content {
+      background-color: lightskyblue;
+    }
+    html.default-theme .underscore {
+      background: #fff;
+    }
+
+    html.default-theme .hero {
+      background-color: #2ca9df;
+      background-image: url(img/hero-left-overlay-color.svg);
+      color: #fff;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+
+    html.default-theme .hero a {
+      color: #fff;
+    }
+
+    html.black-theme .underscore {
+      background: #000;
+      color: #fff;
+    }
+
+    html.black-theme .hero {
+      background: #000;
+      background-image: url(img/hero-left-overlay-white.svg);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+
+    html.black-theme .hero a {
+      color: #fff;
+    }
+
+    html.dark-blue-theme .underscore {
+      background: #0e2c3c;
+      color: #fff;
+    }
+
+    html.dark-blue-theme .hero {
+      background-image: url(img/hero-left-overlay-white.svg);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+
+    html.dark-blue-theme .hero a {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="source">
+<%=Markdown%>
+  </textarea>
+  <!--
+    There's a copy of this JS included in the cached folder,
+    to give yourself a chance if you have no internets /o\
+  -->
+  <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+  <script>
+    var slideshow = remark.create({
+      ratio: '4:3',
+      //ratio: '16:9',
+
+
+      slideNumberFormat: '',
+      // Or you might like the page number bottom right:
+      // slideNumberFormat: '%current%',
+
+      // Default: use ```sql ..``` etc to override
+      highlightLanguage: 'scala',
+
+      // Plausible style for blue background:
+      highlightStyle: 'github',
+
+      // These also look reasonable:
+      //highlightStyle: 'default',
+      //highlightStyle: 'ascetic',
+      //highlightStyle: 'vs',
+
+      //Good styles, but don't really work with a blue background:
+      //highlightStyle: 'ir_black',
+      //highlightStyle: 'dark',
+
+      });
+  </script>
+</body>
+</html>

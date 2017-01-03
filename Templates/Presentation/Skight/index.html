@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html class="default-theme">
+<head>
+  <title>卓逸天成</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <style type="text/css">
+	  img{
+		max-width:100%;
+		max-height:100%;
+	  }
+	  
+    .remark-slide-content{
+      color:#ffffff;
+      height:600px;
+      width:70%;
+      margin: auto;
+      position: relative;
+      background-image: linear-gradient(180deg,#1A75BB,#27A8E1,#76ccfb);
+    }
+    
+  table{
+    width:70%;
+    margin: auto;
+    border: 1px solid #dfdfdf;
+    border-collapse:collapse
+    }
+    table thead{
+        background-color: #5BD078;
+    }
+    table tbody tr:nth-child(2n-1){
+        background-color: rgba(210,238,214,.5);
+    }
+    table tbody tr:nth-child(2n){
+        background-color: rgba(234,247,236,.5);
+    }
+
+    table tr td{
+        padding:10px;
+        text-align: center;
+        border: 1px solid #dfdfdf;
+    }
+    
+    .logo{
+    padding:10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    }
+    .logo img{
+        width:7%;
+        float: left;
+    }
+    .logo div{
+        font-size:1.5em;
+        color: #ffffff;
+        float: left;
+    }
+    .bg-img{
+        width: 30%;
+        /*主页面
+        position: absolute;
+        right:30%;
+        bottom: 20%;*/
+        /*非页面*/
+      position: absolute;
+        right:5%;
+        top: 0;
+
+        display: flex;
+        flex-direction:column;
+        align-items: flex-end;
+    }
+    .bg-img span{
+        border-radius: 5px;
+        background:#ffffff;
+    }
+    .box-1,.box-2{
+        width: 40%;
+        height: 50px;
+        opacity: 0.1;
+        position: relative;
+        right:60%;
+        bottom: -60px;
+    }
+    .box-2{
+        opacity: 0.2;
+        position: relative;
+        right:70%;
+        bottom: -40px;
+    }
+    .box-3{
+        width: 20%;
+        height: 30px;
+        opacity: 0.2;
+        position: relative;
+        bottom: -70px;
+        right:60%;
+    }
+    .box-4{
+        width: 70%;
+        height: 80px;
+        opacity: 0.4;
+    }
+
+  </style>
+</head>
+<body>
+    
+  <textarea id="source">
+<%=Markdown%>
+  </textarea>
+  <!--
+    There's a copy of this JS included in the cached folder,
+    to give yourself a chance if you have no internets /o\
+  -->
+  <script src="/Presentation/Skight/remark.min.js"></script>
+  <script>
+    var slideshow = remark.create({
+      ratio: '4:3',
+      //ratio: '16:9',
+
+
+      slideNumberFormat: '',
+      // Or you might like the page number bottom right:
+      // slideNumberFormat: '%current%',
+
+      // Default: use ```sql ..``` etc to override
+      highlightLanguage: 'scala',
+
+      // Plausible style for blue background:
+      highlightStyle: 'github',
+
+      // These also look reasonable:
+      //highlightStyle: 'default',
+      //highlightStyle: 'ascetic',
+      //highlightStyle: 'vs',
+
+      //Good styles, but don't really work with a blue background:
+      //highlightStyle: 'ir_black',
+      //highlightStyle: 'dark',
+
+      });
+  </script>
+</body>
+</html>
