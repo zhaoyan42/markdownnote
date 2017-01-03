@@ -17,6 +17,7 @@
   },
   "scripts": {
     "build": "grunt build",
-    "start": "node_modules/.bin/http-server dist"
+    "start-kb": "node_modules/.bin/http-server dist/kb",
+    "start-icewine": "node_modules/.bin/http-server dist/icewine"
   }
 }
