@@ -25,13 +25,13 @@
 				  {
 					  expand: true,
 					  cwd: 'Templates/',
-					  src: ['**/*.css'],
+					  src: ['**/*.css','**/*.js','**/*.png','**/*.jpg','**/*.gif','**/*.svg'],
 					  dest: 'dist/kb'
 				  },
 				  {
 					  expand: true,
 					  cwd: 'Templates/',
-					  src: ['**/*.css'],
+					  src: ['**/*.css','**/*.js','**/*.png','**/*.jpg','**/*.gif','**/*.svg'],
 					  dest: 'dist/icewine'
 				  }
 			  ]
