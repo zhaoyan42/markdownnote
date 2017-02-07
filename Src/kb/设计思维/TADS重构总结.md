@@ -51,7 +51,34 @@ TODO:  图片
   * 后台（无界面）模型构建的思想（builder）和实现的完善。
   * 模型构建的语法，浅析业务建模、自然语言，案列诠释（辅助研究CAR）
 *业务与软件（业务专家与软件开发人员）之间最完美的桥梁！
+
 ---
+### 自测试代码案例
+```csharp
+///多层次(案例10)
+/// <case>
+///  +---------------------+                                      
+/// |    +----------+      |      +----------+              
+/// |    |    M3(F2)|      |      |    M2    |    
+///(P1)-->(P3)      (P4)-->(P2)-->(P5)--->   (P6)(T1)
+/// |    |          |      |      |          |     
+/// |    +----------+      |      +----------+     
+/// |      (M1)  (F1)      |
+/// |+-------------------+ |
+/// </case>
+Establish context = () => 
+{
+    root.module("M1").with_fault("F1").module("M3").with_fault("F2");
+    root.module("M1").link_inward("P1").to(root.module("M1").module("M3").input("P3"));
+    root.module("M1").module("M3").link("P4").to_outward(root.module("M1").port("P2"));
+    root.module("M1").link("P2").to(root.module("M2").input("P5"));
+    root.module("M2").output("P6").with_test("T1");
+}
+
+private It two_reachable_F1_T0_and_F1_T1 = () => result.should_contain_only("F1-T1", "F2-T1");
+
+```
+
 ## 四 重构-换汤不换药
 * 修改一些bug之后，发现有些走不动
  *问题：
