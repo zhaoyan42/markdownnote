@@ -76,8 +76,8 @@ Establish context = () =>
 }
 
 private It two_reachable_F1_T0_and_F1_T1 = () => result.should_contain_only("F1-T1", "F2-T1");
-
 ```
+---
 
 ## 四 重构-换汤不换药
 * 修改一些bug之后，发现有些走不动
