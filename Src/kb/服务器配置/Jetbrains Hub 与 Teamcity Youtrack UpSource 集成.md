@@ -9,3 +9,8 @@
 重启TeamCity服务之后，进入Administration->Hub Settings 填入Hub的Url之后（例如http://hub.skight.com:2000/hub）确定
 
 到Synchronization标签中根据需求（一般如果确认集成到Hub则全部勾选）勾选相应的选项，然后点击Save，点击Synchronize now完成同步（可能会有冲突错误，基本可以忽略）
+
+#配置License
+如果集成完成后登录出现You do not have a licence to use this service.则需要重新配置License
+
+到Hub的Services下，点击对应的Youtrack或者UpSource，查看License页面，对License进行分配，即可登录
