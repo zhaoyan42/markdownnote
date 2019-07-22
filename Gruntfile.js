@@ -51,7 +51,7 @@
 				  stylesheet: 'Style.css'
 			  },
 			  files: {
-				  'dist/Index.html': 'dist/**/*.html',
+				  'dist/index.html': 'dist/**/*.html',
 			  }
 		  }
 	  },
