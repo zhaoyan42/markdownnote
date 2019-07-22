@@ -26,13 +26,7 @@
 					  expand: true,
 					  cwd: 'Templates/',
 					  src: ['**/*.css','**/*.js','**/*.png','**/*.jpg','**/*.gif','**/*.svg'],
-					  dest: 'dist/kb'
-				  },
-				  {
-					  expand: true,
-					  cwd: 'Templates/',
-					  src: ['**/*.css','**/*.js','**/*.png','**/*.jpg','**/*.gif','**/*.svg'],
-					  dest: 'dist/icewine'
+					  dest: 'dist'
 				  }
 			  ]
 		  },
@@ -50,30 +44,15 @@
 	  generate_index: {
 		  main: {
 			  options: {
-				  title: '卓逸天成知识文库',
+				  title: '笔记',
 				  rootDirectory: 'dist',
 				  useFileNameAsTitle: true,
 				  generatePage: true,
 				  stylesheet: 'Style.css'
 			  },
 			  files: {
-				  'dist/kb/Index.html': 'dist/kb/**/*.html',
-				  'dist/icewine/Index.html': 'dist/icewine/**/*.html'
+				  'dist/Index.html': 'dist/**/*.html',
 			  }
-		  }
-	  },
-	  convert_ppt: {
-		  all: {
-			  options: {
-				  template: 'Templates/Presentation/Skight/index.html'
-			  },
-			  files: [
-				  {
-					  cwd: 'Src/',
-					  src: ['**/*.md'],
-					  dest: 'dist/'
-				  }
-			  ]
 		  }
 	  },
 	  clean: {
@@ -92,6 +71,6 @@
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-markdown');
 
-  grunt.registerTask('build',['clean:dist','markdown','convert_ppt','generate_index','copy']);
+  grunt.registerTask('build',['clean:dist','markdown','generate_index','copy']);
   grunt.registerTask('default',['build']);
 }
